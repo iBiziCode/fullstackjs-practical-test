@@ -24,6 +24,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+    @Get('public-key')
+  async getPublicKey() {
+    return this.userService.getPublicKey();
+  }
+
+
   @Get()
   async findAll() {
     return this.userService.findAll();

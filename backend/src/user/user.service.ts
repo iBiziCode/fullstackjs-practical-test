@@ -181,5 +181,17 @@ export class UserService {
       throw new InternalServerErrorException('Failed to fetch user registration counts');
     }
   }
+  getPublicKey(): string {
+    try {
+      const pub: any = this.keys.publicKey;
+      if (typeof pub === 'string') {
+        return pub;
+      }
+      return pub.export({ type: 'spki', format: 'pem' }).toString();
+    } catch (error) {
+      this.logger.error('❌ Failed to export public key', error.stack);
+      throw new InternalServerErrorException('Failed to export public key');
+    }
+  }
 
 }
