@@ -184,7 +184,11 @@ export class UserService {
 
   getPublicKey(): string {
     try {
-      return this.keys.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+      const pub = this.keys.publicKey;
+      if (typeof pub === 'string') {
+        return pub;
+      }
+      return (pub as any).export({ type: 'spki', format: 'pem' }).toString();
     } catch (error) {
       this.logger.error('❌ Failed to export public key', error.stack);
       throw new InternalServerErrorException('Failed to export public key');
