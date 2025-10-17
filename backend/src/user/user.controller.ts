@@ -28,6 +28,10 @@ export class UserController {
   async findAll() {
     return this.userService.findAll();
   }
+  @Get('public-key')
+  async getPublicKey() {
+    return this.userService.getPublicKey();
+  }
   @Get('export')
   async exportProto(@Res() res) {
     const users = await this.userService.findAll();
