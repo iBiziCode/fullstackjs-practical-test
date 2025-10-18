@@ -16,7 +16,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         const key = await fetchPublicKey();
         setPublicKey(key);
-      } catch {
+      } catch(error) {
         setError('Failed to load public key');
         toast.error('Could not load public key from server.');
       } finally {

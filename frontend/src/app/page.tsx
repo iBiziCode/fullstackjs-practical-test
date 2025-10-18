@@ -1,50 +1,35 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { listUsers, deleteUser } from '@/lib/fetcher';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { toast } from 'sonner';
 
-export default function UsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+import { useEffect, useState } from 'react';
+import { fetchUserStats } from '@/lib/fetcher';
+import { toast } from 'sonner';
+import { UserStatsChart } from '@/components/userStatsChart';
+
+export default function UserStatsPage() {
+  const [data, setData] = useState<{ date: string; count: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadUsers = async () => {
-    try {
-      const data = await listUsers();
-      setUsers(data);
-    } catch {
-      toast.error('Failed to fetch users');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadUsers();
+    async function loadStats() {
+      try {
+        const stats = await fetchUserStats();
+        toast.success('User stats loaded');
+        setData(stats);
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to load stats');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadStats();
   }, []);
 
-  async function handleDelete(id: string) {
-    await deleteUser(id);
-    toast.success('User removed successfully');
-    loadUsers();
-  }
-
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="p-4 text-gray-500">Loading user stats...</p>;
 
   return (
-    <div className="grid gap-3">
-      {users.map((u) => (
-        <Card key={u.id} className="p-4 flex justify-between items-center">
-          <div>
-            <p className="font-medium">{u.email}</p>
-            <p className="text-sm text-gray-500">{u.role}</p>
-          </div>
-          <Button variant="destructive" size="sm" onClick={() => handleDelete(u.id)}>
-            Delete
-          </Button>
-        </Card>
-      ))}
+    <div className="space-y-4">
+      <UserStatsChart data={data} />
     </div>
   );
 }

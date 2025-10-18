@@ -1,7 +1,7 @@
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
-import { Sidebar } from '@/components/layout/SideBar';
-import { MobileMenu } from '@/components/layout/MobileMenu';
+import { Sidebar } from '@/components/layout/sidebar';
+import { MobileMenu } from '@/components/layout/mobilemenu';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
