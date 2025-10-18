@@ -38,9 +38,9 @@ export class UserService {
         .toString('base64');
 
       await connection.run(
-        `INSERT INTO user_crypto (userId, hash, signature)
-         VALUES (?, ?, ?)`,
-        [id, emailHash, signature],
+        `INSERT INTO user_crypto (userId, signature)
+         VALUES (?, ?)`,
+        [id, signature],
       );
 
       await connection.run('COMMIT');
