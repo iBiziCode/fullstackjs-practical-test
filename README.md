@@ -44,7 +44,7 @@ npm run start
 ```
 
 Runs at http://localhost:3001 \
-Swagger Docs at http://localhost:3001/api/docs \
+Swagger Docs at http://localhost:3001/api/docs 
 
 
 #### Frontend in other terminal
