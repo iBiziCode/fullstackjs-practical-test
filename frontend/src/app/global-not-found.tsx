@@ -3,7 +3,12 @@ import './globals.css';
 import { Sidebar } from '@/components/layout/sidebar';
 import { MobileMenu } from '@/components/layout/mobilemenu';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata = {
+  title: 'Page Not Found',
+  description: 'The page you are looking for does not exist.',
+};
+
+export default function RootLayout() {
   return (
     <html lang="en">
       <body className="flex bg-gray-50 min-h-screen text-gray-900">
