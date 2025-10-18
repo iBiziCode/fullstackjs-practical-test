@@ -1,81 +1,141 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { decodeUsers } from '@/lib/protobuf';
-import { Card } from '@/components/ui/card';
+import { listUsers, updateUser, deleteUser } from '@/lib/fetcher';
 import { toast } from 'sonner';
-import { fetchUsersProto } from '@/lib/fetcher';
-import { verifyUser } from '@/lib/verify';
-import { Badge } from '@/components/ui/badge';
-import { BadgeCheckIcon } from 'lucide-react';
+import { Spinner } from "@/components/ui/spinner"
+import { PencilIcon, TrashIcon } from 'lucide-react';
+import { EditUserDialog } from '@/components/userEditDialog';
+import { Button } from '@/components/ui/button';
+import { DeleteUserDialog } from '@/components/userDeleteDialog';
+
+export default function UsersList() {
+    const [users, setUsers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [editOpen, setEditOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<any | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    useEffect(() => {
+        async function loadUsers() {
+            try {
+                const allUsers = await listUsers();
 
 
-export default function ExportedUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadUsersProto() {
-      try {
-        const response = await fetchUsersProto();
-        const decoded = await decodeUsers(response);
-        const usersArray = Array.isArray(decoded.users) ? decoded.users : decoded.users ? [decoded.users] : [];
-        const verified = [];
-        for (const user of usersArray) {
-          const valid = await verifyUser(user);
-          if (valid) verified.push(user);
+                setUsers(allUsers);
+                toast.success(`${allUsers.length} users loaded`);
+            } catch (err: any) {
+                toast.error(err.message || 'Failed to load users');
+            } finally {
+                setLoading(false);
+            }
         }
-        setUsers(verified);
-        toast.success(`Loaded ${verified.length} verified users from protobuf`);
-      } catch (error:any) {
-        toast.error(error.message || 'Failed to load protobuf data');
-      } finally {
-        setLoading(false);
-      }
-    }
 
-    loadUsersProto();
-  }, []);
+        loadUsers();
+    }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (users.length === 0) return <p>No users found.</p>;
+    if (loading)
+        return <p className="p-4"><Spinner />Loading users</p>;
 
+    if (users.length === 0)
+        return <p className="p-4">No users found.</p>;
 
+    const handleEdit = (user: any) => {
+        setSelectedUser(user);
+        setEditOpen(true);
+    };
 
-  return (
-    <div className="p-4">
-                <h1 className="text-lg font-semibold mb-4">Verified Users</h1>
-    
-                <div className=" overflow-x-auto">
-                    <table className="min-w-full border border-gray-200 bg-white rounded-lg shadow-sm">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="p-3 text-left text-xs md:text-sm font-medium">Email</th>
-                                <th className="p-3 text-left text-xs md:text-sm font-medium">Role</th>
-                                <th className="p-3 text-left text-xs md:text-sm font-medium">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr key={user.id} className="border-t hover:bg-gray-50">
-                                    <td className="p-3 text-xs md:text-sm">{user.email}         <Badge
-                                        variant="secondary"
-                                        className="bg-black text-white dark:bg-blue-600 text text-xs"
+    const handleSave = async (data: any) => {
+        setSaving(true);
+        try {
+            await updateUser(selectedUser.id, data);
+            setUsers(users.map(u => u.id === selectedUser.id ? { ...u, ...data } : u));
+        } catch (err) {
+            toast.error('Failed to update user');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDelete = (user: any) => {
+        setSelectedUser(user);
+        setDeleteOpen(true);
+    };
+
+    const handleConfirmDelete = async (id: string) => {
+        setDeleting(true);
+        try {
+            await deleteUser(id);
+            setUsers(users.filter((u) => u.id !== id));
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    return (
+        <div className="py-4 px-2 md:p-4">
+            <h1 className="text-lg font-semibold mb-4">All Users</h1>
+
+            <div className="">
+                <table className="min-w-full border border-gray-200 bg-white rounded-lg shadow-sm">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Email</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Role</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Status</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id} className="border-t hover:bg-gray-50">
+                                <td className="p-3 text-xs md:text-sm">{user.email}  </td>
+                                <td className="p-3 text-xs md:text-sm">{user.role}</td>
+                                <td className="p-3 text-xs md:text-sm capitalize">{user.status}</td>
+
+                                <td>
+
+                                    <Button
+                                    
+                                        onClick={() => handleEdit(user)}
+                                        variant="outline"
+                                        className= "my-1 mx-auto sm:mr-2"
+                                        size="sm"
                                     >
-                                    <BadgeCheckIcon />
-                                        <span className='hidden md:block'>Verified</span>
-                                    </Badge></td>
-                                    <td className="p-3 text-xs md:text-sm">{user.role}</td>
-                                    <td className="p-3 text-xs md:text-sm capitalize">{user.status}</td>
+                                        <PencilIcon/>
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => handleDelete(user.id)}
+                                        size="sm"
+                                        className='my-1 mx-auto'
+                                    >
+                                        <TrashIcon/>
+                                    </Button>
+                                </td>
 
-    
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-    
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
-        );
-    }
-    
+            <EditUserDialog
+                open={editOpen}
+                onOpenChange={setEditOpen}
+                user={selectedUser}
+                onSave={handleSave}
+                loading={saving}
+            />
+            <DeleteUserDialog
+  open={deleteOpen}
+  onOpenChange={setDeleteOpen}
+  user={selectedUser}
+  onConfirm={handleConfirmDelete}
+  loading={deleting}
+/>
+
+        </div>
+    );
+}
