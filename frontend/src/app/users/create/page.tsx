@@ -48,7 +48,7 @@ export default function CreateUserPage() {
   }
 
   return (
-    <div className="flex justify-center items-start m-10">
+    <div className="flex justify-center items-start md:m-10">
       <Card className="w-full max-w-md p-4 shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg font-bold">Create User</CardTitle>

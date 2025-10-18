@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <h1 className="font-bold text-lg">Dashboard</h1>
               <MobileMenu />
             </header>
-            <main className="p-4 flex-1">{children}</main>
+            <main className="p-3 flex-1">{children}</main>
           </div>
         </AppProvider>
       </body>

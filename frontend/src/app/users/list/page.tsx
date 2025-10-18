@@ -75,25 +75,25 @@ export default function UsersListPage() {
     };
 
     return (
-        <div className="p-4">
+        <div className="py-4 px-2 md:p-4">
             <h1 className="text-lg font-semibold mb-4">All Users</h1>
 
-            <div className=" overflow-x-auto">
+            <div className="">
                 <table className="min-w-full border border-gray-200 bg-white rounded-lg shadow-sm">
                     <thead className="bg-gray-100">
                         <tr>
-                            <th className="p-3 text-left text-sm font-medium">Email</th>
-                            <th className="p-3 text-left text-sm font-medium">Role</th>
-                            <th className="p-3 text-left text-sm font-medium">Status</th>
-                            <th className="p-3 text-left text-sm font-medium">Actions</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Email</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Role</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Status</th>
+                            <th className="p-3 text-left text-xs md:text-sm font-medium">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
                             <tr key={user.id} className="border-t hover:bg-gray-50">
-                                <td className="p-3 text-sm">{user.email}  </td>
-                                <td className="p-3 text-sm">{user.role}</td>
-                                <td className="p-3 text-sm capitalize">{user.status}</td>
+                                <td className="p-3 text-xs md:text-sm">{user.email}  </td>
+                                <td className="p-3 text-xs md:text-sm">{user.role}</td>
+                                <td className="p-3 text-xs md:text-sm capitalize">{user.status}</td>
 
                                 <td>
 
@@ -101,14 +101,16 @@ export default function UsersListPage() {
                                     
                                         onClick={() => handleEdit(user)}
                                         variant="outline"
-                                        className= "h-10 mr-2"
+                                        className= "my-1 mx-auto sm:mr-2"
+                                        size="sm"
                                     >
                                         <PencilIcon/>
                                     </Button>
                                     <Button
                                         variant="destructive"
                                         onClick={() => handleDelete(user.id)}
-                                        className=""
+                                        size="sm"
+                                        className='my-1 mx-auto'
                                     >
                                         <TrashIcon/>
                                     </Button>

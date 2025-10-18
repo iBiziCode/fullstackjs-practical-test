@@ -50,23 +50,23 @@ export default function ExportedUsersPage() {
                     <table className="min-w-full border border-gray-200 bg-white rounded-lg shadow-sm">
                         <thead className="bg-gray-100">
                             <tr>
-                                <th className="p-3 text-left text-sm font-medium">Email</th>
-                                <th className="p-3 text-left text-sm font-medium">Role</th>
-                                <th className="p-3 text-left text-sm font-medium">Status</th>
+                                <th className="p-3 text-left text-xs md:text-sm font-medium">Email</th>
+                                <th className="p-3 text-left text-xs md:text-sm font-medium">Role</th>
+                                <th className="p-3 text-left text-xs md:text-sm font-medium">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map((user) => (
                                 <tr key={user.id} className="border-t hover:bg-gray-50">
-                                    <td className="p-3 text-sm">{user.email}         <Badge
+                                    <td className="p-3 text-xs md:text-sm">{user.email}         <Badge
                                         variant="secondary"
                                         className="bg-black text-white dark:bg-blue-600 text text-xs"
                                     >
-                                        <BadgeCheckIcon className='text-sm' />
-                                        Verified
+                                    <BadgeCheckIcon />
+                                        <span className='hidden md:block'>Verified</span>
                                     </Badge></td>
-                                    <td className="p-3 text-sm">{user.role}</td>
-                                    <td className="p-3 text-sm capitalize">{user.status}</td>
+                                    <td className="p-3 text-xs md:text-sm">{user.role}</td>
+                                    <td className="p-3 text-xs md:text-sm capitalize">{user.status}</td>
 
     
                                 </tr>
