@@ -30,7 +30,6 @@ export class DbService implements OnModuleInit {
       await this.db.exec(`
         CREATE TABLE IF NOT EXISTS user_crypto (
           userId TEXT,
-          hash TEXT,
           signature TEXT,
           FOREIGN KEY(userId) REFERENCES users(id)
         );
