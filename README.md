@@ -63,6 +63,7 @@ Runs at http://localhost:3002
 ### Notes
 
 - Assumed authentication will be added at a later phase
+- assumed that the email signature is created only once, and the user becomes unverified if it’s updated.
 - Assumed the frontend needs to do CRUD also
 - Everything run is in development mode, please use dev branch
 - No data will be available on startup
