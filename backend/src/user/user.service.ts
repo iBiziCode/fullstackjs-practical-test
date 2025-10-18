@@ -32,15 +32,15 @@ export class UserService {
         [id, email, role, status, createdAt],
       );
 
-      const hash = crypto.createHash('sha256').update(email).digest('hex');
+      const emailHash = crypto.createHash('sha384').update(email, 'utf8').digest();
       const signature = crypto
-        .sign('sha384', Buffer.from(hash), this.keys.privateKey)
+        .sign(null, emailHash, this.keys.privateKey)
         .toString('base64');
 
       await connection.run(
         `INSERT INTO user_crypto (userId, hash, signature)
          VALUES (?, ?, ?)`,
-        [id, hash, signature],
+        [id, emailHash, signature],
       );
 
       await connection.run('COMMIT');

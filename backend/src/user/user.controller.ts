@@ -12,7 +12,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as protobuf from 'protobufjs';
 import * as path from 'path';
-import { Response } from 'express';
 import { Res } from '@nestjs/common';
 
 @Controller('users')
@@ -24,7 +23,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-    @Get('public-key')
+  @Get('public-key')
   async getPublicKey() {
     return this.userService.getPublicKey();
   }
